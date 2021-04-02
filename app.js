@@ -1,6 +1,8 @@
-let count=0;
-setInterval(() => console.log(`${++count}mississippi`),1000)
+const seconds = [1,2]
 
-setTimeout(() => {
-    console.log('hello from the past!')
-    process.exit();},3000)
+seconds.forEach((sec) =>
+{
+    setTimeout(()=>{ console.log(sec)},sec*1000)
+})
+
+console.log("Done")
