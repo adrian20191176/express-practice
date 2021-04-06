@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 
 app.get('/hi',hi)
-app.get('/json',j)
+app.get('/json',jo)
 app.get('/echo',respondEcho)
 app.get('/static/*',respondStatic)
 
@@ -12,7 +12,7 @@ function hi(req,res){
     res.end("hi");
 }
 
-function j(req,res){
+function jo(req,res){
     res.json({nam:'hi',age:8});
 }
 
