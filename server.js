@@ -1,41 +1,44 @@
 const fs  = require('fs');
 const express = require('express');
 const EventEmitter = require('events');
+const tf = require("@tensorflow/tfjs");
 
-const chatEmitter = new EventEmitter();
 const port = process.env.PORT || 1337;
 
 const app = express();
 
-app.get('/chat',respondChat);
-app.get('/sse',respondSSE);
-app.get('/static/*',respondStatic);
+app.get('*',respondStatic);
 
 app.listen(port,() => console.log(`Port Listenin at ${port}`) );
 
 function respondStatic(req,res){
-    const fileName = `${__dirname}/public/${req.params[0]}`;
-    fs.createReadStream(fileName)
-        .on('error', () =>{})
-        .pipe(res)
+    loadHostedPretrainedModel('https://raw.githubusercontent.com/SCAARD-2021/ReachHigh/main/model/model.json').then(
+        (moel) => {
+            const model = moel;
+            console.log(8);
+            
+  let a= 1;
+  let b= 1;
+  let input_xs = tf.tensor2d([
+      [a,b]
+  ]);
+  let output = model.predict(input_xs);   
+  const outputData = output.dataSync();
+  console.log(outputData);
+        }
+    );
+    // const model = await tf.loadLayersModel(tf.io.httpRequest('https://github.com/SCAARD-2021/ReachHigh/blob/main/model/model.json', {fetch: myCustomFetch}));
 }
 
-function respondChat(req,res){
-    const {message} = req.query;
-    chatEmitter.emit('message',message)
-    res.end()
-}
-
-function respondSSE(req,res){
-    res.writeHead(200,{
-        'Content-Type':'text/event-stream',
-        'Connection' : 'keep-alive'
-    })
-
-    const onMessage = msg => res.write(`data: ${msg}\n\n`)
-    chatEmitter.on('message',onMessage)
-
-    res.on('close', function() {
-        chatEmitter.off('message',onMessage)
-    })
-}
+function loadHostedPretrainedModel(url) {
+    try {
+      const model = tf.loadLayersModel(url);
+      
+      // We can't load a model twice due to
+      // https://github.com/tensorflow/tfjs/issues/34
+      // Therefore we remove the load buttons to avoid user confusion.
+      return model;
+    } catch (err) {
+      console.error(err);
+    }
+  }

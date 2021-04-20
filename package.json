@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/adrian20191176/express-practice#readme",
   "dependencies": {
+    "@tensorflow/tfjs": "^3.4.0",
+    "@tensorflow/tfjs-node": "1.2.8",
     "express": "^4.17.1",
     "google-play-scraper": "^8.0.2",
     "nodemon": "^2.0.7"
